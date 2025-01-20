@@ -1,11 +1,11 @@
+mod color;
+mod constant;
 use minifb::{Scale, ScaleMode, Window, WindowOptions};
+use constant::*;
 
-const WIDTH: usize = 640 ;
-const HEIGHT: usize = 420;
 
 fn main() {
-    let mut buffer: Vec<u32> = vec![0; WIDTH * HEIGHT];
-
+    let mut memory:Box<[u16]>= vec![0;MEMORY_SIZE].into_boxed_slice();
     let mut window = Window::new(
         "GraphicVM",
         WIDTH,
@@ -23,16 +23,15 @@ fn main() {
         panic!("{}", e);
     });
 
-    // Limit to max ~60 fps update rate
-    window.set_target_fps(60);
+    window.set_target_fps(30);
 
     while window.is_open(){
-        for i in buffer.iter_mut() {
-            *i = 0x5F0F0F; // write something more funny here!
+        for i in SCREEN_MEMORY_START..SCREEN_MEMORY_END {
+            memory[i]= 0x2222
         }
         // We unwrap here as we want this code to exit if it fails. Real applications may want to handle this in a different way
         window
-            .update_with_buffer(&buffer, WIDTH, HEIGHT)
+            .update_with_buffer(&color::create_image_buffer(&memory[SCREEN_MEMORY_START..SCREEN_MEMORY_END]), WIDTH, HEIGHT)
             .unwrap();
     }
 }
