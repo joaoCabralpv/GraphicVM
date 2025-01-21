@@ -56,15 +56,15 @@ pub fn vm_color_to_rgb_color(color:u8)->u32{
     }
 }
 
-pub fn create_image_buffer(screen_memory:&[u16]) -> [u32;SCREEN_MEMORY_SIZE*4]
+pub fn create_image_buffer(memory:&[u16]) -> [u32;SCREEN_MEMORY_SIZE*4]
 {
     let mut image_buffer:[u32;SCREEN_MEMORY_SIZE*4] = [0;SCREEN_MEMORY_SIZE*4];
     for i in 0..SCREEN_MEMORY_SIZE{
         //println!("{}",screen_memory[i]);
-        let pixel1:u8 = (screen_memory[i]&0xF).try_into().unwrap();
-        let pixel2:u8 = ((screen_memory[i]>>4)&0xF).try_into().unwrap();
-        let pixel3:u8 = ((screen_memory[i]>>8)&0xF).try_into().unwrap();
-        let pixel4:u8 = ((screen_memory[i]>>12)&0xF).try_into().unwrap();
+        let pixel1:u8 = (memory[i+SCREEN_MEMORY_START]&0xF).try_into().unwrap();
+        let pixel2:u8 = ((memory[i+SCREEN_MEMORY_START]>>4)&0xF).try_into().unwrap();
+        let pixel3:u8 = ((memory[i+SCREEN_MEMORY_START]>>8)&0xF).try_into().unwrap();
+        let pixel4:u8 = ((memory[i+SCREEN_MEMORY_START]>>12)&0xF).try_into().unwrap();
         image_buffer[4*i]=vm_color_to_rgb_color(pixel1);
         image_buffer[(4*i)+1]=vm_color_to_rgb_color(pixel2);
         image_buffer[(4*i)+2]=vm_color_to_rgb_color(pixel3);
